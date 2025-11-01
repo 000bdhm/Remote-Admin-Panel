@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-primary: #000;
+            --bg-secondary: #0a0a0a;
+            --border-color: #1a1a1a;
+            --text-primary: #fff;
+            --text-secondary: #666;
+            --btn-bg: #fff;
+            --btn-text: #000;
+            --error-bg: #1a0000;
+            --error-border: #330000;
+            --error-text: #ff4444;
+        }
+        
+        body.light-mode {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #fff;
+            --border-color: #e0e0e0;
+            --text-primary: #000;
+            --text-secondary: #666;
+            --btn-bg: #000;
+            --btn-text: #fff;
+            --error-bg: #ffe5e5;
+            --error-border: #ffcccc;
+            --error-text: #cc0000;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .login-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 40px;
+            width: 100%;
+            max-width: 360px;
+            transition: all 0.3s ease;
+        }
+        
+        .top-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 4px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .control-btn:hover {
+            opacity: 0.8;
+        }
+        
+        .logo { 
+            text-align: center; 
+            margin-bottom: 40px; 
+        }
+        
+        .logo h1 { 
+            font-size: 20px; 
+            font-weight: 600; 
+            color: var(--text-primary); 
+            letter-spacing: -0.5px; 
+        }
+        
+        .logo p { 
+            color: var(--text-secondary); 
+            font-size: 13px; 
+            margin-top: 8px; 
+        }
+        
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+        
+        .form-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            color: var(--text-secondary); 
+            font-size: 13px; 
+            font-weight: 500; 
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .form-group input:focus { 
+            outline: none; 
+            border-color: var(--text-secondary); 
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .remember-me input[type="checkbox"] {
+            width: auto;
+        }
+        
+        .remember-me label {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 10px;
+            background: var(--btn-bg);
+            border: none;
+            border-radius: 4px;
+            color: var(--btn-text);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-login:hover { 
+            opacity: 0.8; 
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .error {
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            color: var(--error-text);
+            font-size: 13px;
+            display: none;
+        }
+        
+        .error.show { 
+            display: block; 
+        }
+        
+        .loading {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
+        .loader-small {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--text-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #333;
+            opacity: 0.4;
+            transition: opacity 0.3s;
+        }
+
+        .footer:hover {
+            opacity: 0.7;
+        }
+
+        body.light-mode .footer {
+            color: #999;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-controls">
+        <button class="control-btn" id="themeToggle">🌙</button>
+    </div>
+    
+    <div class="login-container">
+        <div class="logo">
+            <h1>ADMIN PANEL</h1>
+            <p>Remote System Control</p>
+        </div>
+        
+        <div id="autoLoginMessage" class="loading" style="display: none;">
+            <div class="loader-small"></div>
+            <span>Checking session...</span>
+        </div>
+        
+        <div id="loginFormContainer">
+            <div id="error" class="error"></div>
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" required autocomplete="current-password">
+                </div>
+                <div class="remember-me">
+                    <input type="checkbox" id="rememberDevice" checked>
+                    <label for="rememberDevice">Remember this device</label>
+                </div>
+                <button type="submit" class="btn-login" id="loginBtn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        Made By: Bdhm_
+    </div>
+    
+    <script>
+        let currentTheme = localStorage.getItem('admin_theme') || 'dark';
+        
+        function applyTheme() {
+            if (currentTheme === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('themeToggle').textContent = '☀️';
+            } else {
+                document.body.classList.remove('light-mode');
+                document.getElementById('themeToggle').textContent = '🌙';
+            }
+        }
+        
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('admin_theme', currentTheme);
+            applyTheme();
+        });
+        
+        async function checkAutoLogin() {
+            const savedToken = localStorage.getItem('admin_token');
+            const rememberDevice = localStorage.getItem('admin_remember_device') === 'true';
+            
+            if (savedToken && rememberDevice) {
+                document.getElementById('loginFormContainer').style.display = 'none';
+                document.getElementById('autoLoginMessage').style.display = 'block';
+                
+                try {
+                    const response = await fetch('/api/validate-token', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({token: savedToken})
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.valid) {
+                        setTimeout(() => {
+                            window.location.href = `/dashboard?token=${savedToken}`;
+                        }, 500);
+                    } else {
+                        localStorage.removeItem('admin_token');
+                        localStorage.removeItem('admin_remember_device');
+                        showLoginForm();
+                    }
+                } catch(e) {
+                    console.error('Token validation error:', e);
+                    showLoginForm();
+                }
+            } else {
+                showLoginForm();
+            }
+        }
+        
+        function showLoginForm() {
+            document.getElementById('autoLoginMessage').style.display = 'none';
+            document.getElementById('loginFormContainer').style.display = 'block';
+        }
+        
+        window.addEventListener('load', function() {
+            applyTheme();
+            checkAutoLogin();
+        });
+        
+        function showError(msg) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = msg;
+            errorDiv.classList.add('show');
+            setTimeout(() => errorDiv.classList.remove('show'), 3000);
+        }
+        
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const loginBtn = document.getElementById('loginBtn');
+            const originalText = loginBtn.textContent;
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        username: document.getElementById('username').value,
+                        password: document.getElementById('password').value
+                    })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    localStorage.setItem('admin_token', data.token);
+                    
+                    const rememberDevice = document.getElementById('rememberDevice').checked;
+                    localStorage.setItem('admin_remember_device', rememberDevice);
+                    
+                    window.location.href = `/dashboard?token=${data.token}`;
+                } else {
+                    showError(data.message || 'Invalid credentials');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = originalText;
+                }
+            } catch(e) {
+                console.error('Login error:', e);
+                showError('Connection error');
+                loginBtn.disabled = false;
+                loginBtn.textContent = originalText;
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
