@@ -97,8 +97,9 @@ cd remote-admin-panel
 pip install -r requirements.txt
 
 # Run server
-python server.py
+python remote_panel.py
 
 ```
+
 
 > GitHub [@000bdhm](https://github.com/000bdhm) &nbsp;&middot;&nbsp;
